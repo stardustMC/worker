@@ -327,7 +327,7 @@ def run():
         # 1.去redis的队列中获取待执行的订单号
         oid = get_redis_task()
         if not oid:
-            time.sleep(3)
+            time.sleep(5)
             continue
 
         # 2.连接数据库获取订单信息
@@ -338,12 +338,12 @@ def run():
         # 3.更新订单状态-正在执行
         update_order_status(oid, 2)
 
-        # 4.执行订单-线程池 20
-        pool = ThreadPoolExecutor(20)
+        # 4.执行订单-线程池 4
+        pool = ThreadPoolExecutor(4)
         print(order_object.url)
         for i in range(order_object.count):  # 100
             pool.submit(task, order_object.url)
-        pool.shutdown()  # 等待20线程把100个人任务执行完成
+        pool.shutdown()  # 等待4个线程把100个人任务执行完成
 
         # 5.如果有错误，就继续执行
         global ERROR_COUNT

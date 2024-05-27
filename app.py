@@ -327,6 +327,7 @@ def run():
         # 1.去redis的队列中获取待执行的订单号
         oid = get_redis_task()
         if not oid:
+            time.sleep(3)
             continue
 
         # 2.连接数据库获取订单信息
